@@ -13,4 +13,31 @@ Hint. Define a proper datatype for the temperature.
 type scale = Kelvin | Celsius | Fahrenheit | Rankine | Delisle | Newton | Reaumur | Romer ;;
 type temperature = {temp : float; scala : scale};;
 
-let t1 = {temp= 0.0; scala= Celsius};;
+let t1 = {temp= 2.0; scala= Celsius};;
+let convert t scalaDesiderata =
+  if (t.scala==scalaDesiderata) then
+    t 
+  else
+  let rec changeScale t = 
+    match t.scala with
+    | Kelvin -> {temp= 0.0; scala= Celsius}
+    | Fahrenheit -> {temp= 0.0; scala= Celsius}
+    | Rankine ->{temp= 0.0; scala= Celsius}
+    | Delisle -> {temp= 0.0; scala= Celsius}
+    | Newton -> {temp= 0.0; scala= Celsius}
+    | Reaumur -> {temp= 0.0; scala= Celsius}
+    | Romer -> {temp= 0.0; scala= Celsius}
+    | Celsius -> 
+        (match scalaDesiderata with 
+          Kelvin -> {temp= t.temp +. 273.15; scala= Kelvin}
+        | Fahrenheit -> {temp= 0.0; scala= Celsius}
+        | Rankine ->{temp= 0.0; scala= Celsius}
+        | Delisle -> {temp= 0.0; scala= Celsius}
+        | Newton -> {temp= 0.0; scala= Celsius}
+        | Reaumur -> {temp= 0.0; scala= Celsius}
+        | Romer -> {temp= 0.0; scala= Celsius}
+        | Celsius -> t
+        )
+  in changeScale t ;;
+;;
+convert t1 Celsius;;
