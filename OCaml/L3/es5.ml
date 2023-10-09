@@ -9,3 +9,13 @@ operator (-): string → string → string that subtracts the letters in a strin
 anagram : string → string list → boolean that given a dictionary of strings, 
   checks if the input string is an anagram of one or more of the strings in the dictionary
 *)
+let parola = "a,.a";;
+let is_palindrome s= 
+  let rec is_palindrome_rec = function
+    | "" -> true
+    | s -> if ((String.length s)==1) then true 
+          else if ((String.get s 0)==(String.get s ((String.length s)-1))) then 
+            is_palindrome (String.sub s 1 ((String.length s)-2)) 
+          else false
+  in is_palindrome_rec (String.concat "" (Str.split (Str.regexp "[,. \t]+?!") s));;
+is_palindrome parola;;
