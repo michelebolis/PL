@@ -34,7 +34,6 @@ meno "Walter Cazzola" "abcwxyz";;
 let rec is_anagram = function
   | "", "" -> true
   | s1, s2 -> if (String.length s1)!=(String.length s2) then false 
-          else if (String.length s1)==1 then (String.get s1 0)==(String.get s2 0)
           else is_anagram (meno s1 (String.make 1 (String.get s1 0)), meno s2 (String.make 1 (String.get s1 0)))
 ;;
 let rec anagram s = function
