@@ -15,7 +15,18 @@ let is_palindrome s=
     | "" -> true
     | s -> if ((String.length s)==1) then true 
           else if ((String.get s 0)==(String.get s ((String.length s)-1))) then 
-            is_palindrome (String.sub s 1 ((String.length s)-2)) 
+            is_palindrome_rec (String.sub s 1 ((String.length s)-2)) 
           else false
   in is_palindrome_rec (String.concat "" (Str.split (Str.regexp "[,. \t]+?!") s));;
 is_palindrome parola;;
+let meno s1 s2 =
+  let rec substract s1 s2 = 
+    match s1 with 
+      "" -> ""
+    | _ ->  
+      match s2 with 
+        "" -> s1 
+      | s -> substract (String.concat "" (Str.split (Str.regexp (Char.escaped (String.get s2 0))) s1)) (String.sub s2 1 ((String.length s2)-1))
+  in substract s1 s2 
+;;
+meno "Walter Cazzola" "abcwxyz";;
