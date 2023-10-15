@@ -14,3 +14,24 @@ The recognized operators should be +, - (both unary and binary), *, /, ** over i
 The evaluation/translation can be realized by pushing the recognized elements on a stack. 
 Define the module independently of the Stack implementation and try to use functors to adapt it.   
 *)
+module PolishCalculator :
+  sig
+    type Expr 
+    val expr_of_string : string -> a' Expr
+    val eval : expr -> int
+  end 
+  = 
+  struct
+    type expr = []
+    let rec pow x = function
+      | 0 -> 1.0
+      | i -> x *. (pow x (i-1))
+    ;;
+    let expr_of_string s =
+      []
+    ;;
+    let eval x = 
+      1
+    ;;
+  end
+;;
