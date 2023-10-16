@@ -6,24 +6,37 @@ The text is read from a file (look at the pervasive module in the manual) and it
 
 Note that words with different case should be considered the same.*)
 (*usare prima #load "str.cma";;*)
-type map_entry = {s:string; n:int};;
-let channel = Stdlib.open_in "text.txt";;
-let leggi channel= 
-  let rec leggi_riga l = 
-    try leggi_riga (List.append l (Str.split (Str.regexp " ") (Stdlib.input_line channel))) with End_of_file -> l
-  in leggi_riga [];;
+let channel = open_in "text.txt";;
+(* Funzione che dato un canale di input, restituisce una lista contenente le parole *)
+let read channel= 
+  let rec read_row l = 
+    try 
+      read_row (List.append l (Str.split (Str.regexp " ") (input_line channel))) 
+    with 
+      End_of_file -> l
+  in read_row [];;
+(* Funzione che data una lista di stringhe, le fa diventare tutte minuscole*)
 let to_lower l =
-  let rec to_lower_rec acc list= 
-    match list with
-    | (h::tl) -> to_lower_rec ((String.lowercase_ascii h)::acc) tl
+  let rec to_lower_rec acc l= 
+    match l with
+    | h::tl -> to_lower_rec ((String.lowercase_ascii h)::acc) tl
     | _ -> acc
   in to_lower_rec [] l;;
+(* Funzione che inserisce nella lista l, la coppia chiave, valore *)
+let insert k v l = (k, v) :: l
+(* Funzione che cerca la chive k nella lista *)
+let rec lookup k = function
+  | [] -> None
+  | (k', v) :: t -> if k = k' then Some v else lookup k t
+(* Funzione che data una lista di stringhe, restituisce una lista stringa, occorrenza *)
 let occurrency l =
-  let rec occurency_rec map= function
-  | h::tl -> try let x = (List.find (fun x -> (x.s==h)) map) (*(occurency_rec x.n==((x.n)+1))::map tl*) 
-              with Not_found -> occurency_rec {s=h;n=1}::map tl;
-              occurency_rec x.n==((x.n)+1)::map tl;
+  let rec occurency_rec map = function
   | [] -> map
+  | h::tl -> try 
+                occurency_rec ((h, ((List.assoc h map)+1))::(List.remove_assoc h map)) tl
+              with 
+                Not_found -> occurency_rec (insert h 1 map) tl
   in occurency_rec [] l;;
-let parole = (to_lower (leggi channel));;
+
+let parole = (to_lower (read channel));;
 occurrency parole;; 
