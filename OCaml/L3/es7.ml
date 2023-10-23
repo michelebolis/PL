@@ -14,24 +14,49 @@ The recognized operators should be +, - (both unary and binary), *, /, ** over i
 The evaluation/translation can be realized by pushing the recognized elements on a stack. 
 Define the module independently of the Stack implementation and try to use functors to adapt it.   
 *)
-module PolishCalculator :
+type expr =
+  | Unario of op * expr
+  | Binario of expr * op * expr 
+  | Value of int
+and op = Somma | Differenza | Divisione | Prodotto | Potenza 
+;;
+module type PolishCalculator =
   sig
-    type Expr 
-    val expr_of_string : string -> a' Expr
+    val expr_of_string : string -> expr
     val eval : expr -> int
   end 
-  = 
+;;
+module Calculator_Stack : PolishCalculator = 
   struct
-    type expr = []
-    let rec pow x = function
-      | 0 -> 1.0
-      | i -> x *. (pow x (i-1))
+    let parse_op = function
+      | "+" -> Somma
+      | "-" -> Differenza
+      | "/" -> Divisione
+      | "*" -> Prodotto 
+      | _ -> Potenza
     ;;
-    let expr_of_string s =
-      []
+    let expr_of_string s = 
+      let elements = String.split_on_char ' ' s in
+      let stack = Stack.create() in
+      List.iter (
+        fun element ->
+          match int_of_string_opt element with
+          | Some n -> Stack.push (Value n) stack
+          | None ->
+            Stack.push (Binario ((Stack.pop stack), (parse_op element), (Stack.pop stack))) stack
+      ) elements;
+      Stack.pop stack
     ;;
-    let eval x = 
-      1
+    let rec eval = function  
+      | Value x -> x
+      | Unario (op, x) -> (eval_op op) (eval x) 0
+      | Binario (x1, op, x2) -> (eval_op op) (eval x1) (eval x2)
+    and eval_op = function 
+      | Somma -> (+)
+      | Differenza -> (-)
+      | Divisione -> (/)
+      | Prodotto -> ( * )
+      | Potenza -> ( * )
     ;;
   end
 ;;
