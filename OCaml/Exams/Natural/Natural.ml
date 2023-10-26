@@ -19,21 +19,21 @@ module N : NaturalI =
       | (Zero, Zero) -> Zero 
       | (Succ(a), Zero) -> Succ(a)
       | (Zero, Succ(a)) -> Succ(a)
-      | (Succ(a), Succ(b)) -> Succ(a) + Succ(b)
+      | (a, Succ(b)) -> Succ(a) + Succ(b)
     ;;
     let rec ( - ) x y = 
       match (x, y) with 
       | (Zero, Zero) -> Zero 
       | (Succ(a), Zero) -> Succ(a)
       | (Zero, Succ(a)) -> raise NegativeNumber
-      | (Succ(a), Succ(b)) -> Succ(a) - Succ(b)
+      | (Succ(a), Succ(b)) -> a - b
     ;;
     let rec ( * ) x y = 
       match (x, y) with 
       | (Zero, Zero) -> Zero 
       | (Succ(a), Zero) -> Zero
       | (Zero, Succ(a)) -> Zero
-      | (Succ(a), Succ(b)) -> Succ(a) * b + Succ(a)
+      | (a, Succ(b)) -> (a * b) + a
     ;;
     let rec ( / ) x y = 
       match (x, y) with 
