@@ -4,6 +4,7 @@ output [6; 2; 1; 3; 1; 2]
 *)
 let occurencies a = 
   let rec occurencies_rec result current_count = function 
+    | [] -> []
     | _::[] -> current_count::result
     | h::next::tl when h=next -> occurencies_rec result (current_count+1) (next::tl) 
     | h::next::tl -> occurencies_rec (current_count::result) 1 (next::tl) 
