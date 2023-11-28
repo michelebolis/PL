@@ -3,14 +3,15 @@
 start() -> register(chat_server, 
 		spawn(fun() -> 
 			process_flag(trap_exit, true),
-            io:format("Server started"), 
+            io:format("Server started\n"), 
 			Val = (catch server_loop([])), 
 			io:format("Server terminated with:~p~n",[Val]) 
-		end)).
+		end)),
+		ok.
 server_loop(L) ->
 	receive 
 		{login, Pid1, Group, Nick} -> 
-			io:format("Received login ~p~n ~p~n ~p~n", [Pid1, Group, Nick]),
+			io:format("Received login from ~p; Group: ~p, Nick: ~p", [Pid1, Group, Nick]),
 			case lookup(Group, L) of 
 			{ok, Pid} -> 
 			% nella lista L ho già un group manager per quel gruppo, 
@@ -24,7 +25,7 @@ server_loop(L) ->
 				Pid = spawn_link(
 					fun() -> chat_group:start(Pid1, Nick) end), 
                 Pid1 ! {controller, Pid},
-                io:format("Created new controller for group ~p~n at ~p~n", [Group, Pid]),
+                io:format("Created new controller for group ~p at ~p~n", [Group, Pid]),
 				server_loop([{Group,Pid}|L]) 
 			end; 
 		{mm_closed, _} -> server_loop(L); 

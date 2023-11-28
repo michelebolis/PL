@@ -14,6 +14,7 @@ group_controller(L) ->
 	receive 
 		{msg, Pid1, Nick, Str} -> 
 			lists:foreach(fun({Pid,_}) -> 
+				io:format("~p~n", [Pid]),
 				(Pid ! {msg, Pid1, Nick, Str}) end, L), 
 			group_controller(L); 
 		{login, Pid, Nick} -> 
