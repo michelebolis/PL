@@ -19,7 +19,7 @@
 -export([long_reversed_string/1, long_reversed_string/2]).
 long_reversed_string(W) -> 
     Master = self(),
-    Pid = lists:map(
+    _Pid = lists:map(
         fun(K) -> spawn(slave, reverse, [K, Master, substring(W, K, length(W) rem 10, 10)]) end, 
         lists:seq(1, 10)),
     rebuild(1, 10, []).
