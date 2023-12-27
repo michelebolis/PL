@@ -1,4 +1,4 @@
-name := "BasicProjectWithScalaTest"
+name := "Combinators"
 
 version := "1.0"
 
