@@ -9,7 +9,8 @@ case class Number(x : Int) extends Expr{
 }
 
 class exprStepByStepParser extends JavaTokenParsers {
-    def start = expr ^^ {s => printSteps(s)}
+    override val whiteSpace = """[ ]""".r
+    def start = rep(expr <~ """[\r\n]*""".r) ^^ {l => l.foreach{s=> printSteps(s);println()}}
     def expr : Parser[Expr] = (term ~ op ~ expr) ^^ {case (x ~ op ~ y) => InternalExpr(x, op, y)} | term 
     def term : Parser[Expr] = ("(" ~> expr <~ ")") | wholeNumber ^^ {x => Number(x.toInt)}
     def op = ("+" | "-" | "*" | "/")
@@ -38,9 +39,11 @@ class exprStepByStepParser extends JavaTokenParsers {
 
 object Main {
     def main (args:Array[String]) : Unit = {
-        args.foreach{ line =>
+        args.foreach{ path =>
+            var src = scala.io.Source.fromFile(path)
+            var lines = src.mkString
             val p = new exprStepByStepParser
-            p.parseAll(p.start, line) match {
+            p.parseAll(p.start, lines) match {
                 case p.Success(t, _) => println()
                 case x => println(x)
             }
